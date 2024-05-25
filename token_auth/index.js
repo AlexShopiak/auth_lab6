@@ -2,6 +2,7 @@ const uuid = require('uuid');
 const express = require('express');
 const axios = require('axios');
 const bodyParser = require('body-parser');
+const jwt = require('jsonwebtoken');
 const path = require('path');
 const port = 3000;
 const fs = require('fs');
@@ -93,17 +94,16 @@ app.post('/api/tokenfromcode', async (req, res) => {
                 client_secret: 'ZRF8Op0tWM36p1_hxXTU-B0K_Gq_-eAVtlrQpY24CasYiDmcXBhNS6IJMNcz1EgB',
                 code: code,
                 redirect_uri: 'http://localhost:3000',
-                scope: 'offline_access',
             }
         };
 
         try {
             const response = await axios(options);
-            console.log(response.data)
-            
+            const decoded = jwt.decode(response.data.id_token);
 
             const sessionId = response.data.access_token;
-            const currentSession = {"username": "someone", "refresh":response.data.refresh_token}
+            const currentSession = {"username": decoded.email, "refresh":response.data.refresh_token};
+
             sessions.set(sessionId, currentSession);
             res.json({ token: response.data.access_token });
         
