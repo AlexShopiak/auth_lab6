@@ -155,6 +155,23 @@
     </style>
 
     <script>
+        const currentUrl = window.location.href;
+        const code = currentUrl.split('code=')[1];
+
+        if(code) {
+            axios({
+                method: 'post',
+                url: '/api/tokenfromcode',
+                data: {code}
+            }).then((response) => {
+                const token = JSON.stringify(response.data);
+                localStorage.setItem('session', token);
+                window.location.href = 'http://localhost:3000/'
+            }).catch((response) => {
+                console.log(responce)
+            });
+        }
+
         function isTokenExpiring(token) {
             const payload = JSON.parse(atob(token.split('.')[1]));
             const expirationTime = payload.exp * 1000;
