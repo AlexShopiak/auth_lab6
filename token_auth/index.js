@@ -86,12 +86,12 @@ app.post('/api/tokenfromcode', async (req, res) => {
     if (code) {
         const options = {
             method: 'POST',
-            url: 'https://kpi.eu.auth0.com/oauth/token',
+            url: 'https://dev-7sfm4dwi0agzg42e.us.auth0.com/oauth/token',
             headers: {'content-type': 'application/x-www-form-urlencoded'},
             data: {
                 grant_type: 'authorization_code',
-                client_id: 'JIvCO5c2IBHlAe2patn6l6q5H35qxti0',
-                client_secret: 'ZRF8Op0tWM36p1_hxXTU-B0K_Gq_-eAVtlrQpY24CasYiDmcXBhNS6IJMNcz1EgB',
+                client_id: '2rt9zMZergxHgi7SqMDSo2nBLXw2gHV3',
+                client_secret: 'UhwrkkaOHZ8jLwirvoivMAG8n1AeEe6NfI1itImdyjEbAzsygoo0Pjizl_HuYRD6',
                 code: code,
                 redirect_uri: 'http://localhost:3000',
             }
