@@ -80,6 +80,40 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname+'/index.html'));
 })
 
+app.post('/api/tokenfromcode', async (req, res) => {
+    const code = req.body.code;
+    if (code) {
+        const options = {
+            method: 'POST',
+            url: 'https://kpi.eu.auth0.com/oauth/token',
+            headers: {'content-type': 'application/x-www-form-urlencoded'},
+            data: {
+                grant_type: 'authorization_code',
+                client_id: 'JIvCO5c2IBHlAe2patn6l6q5H35qxti0',
+                client_secret: 'ZRF8Op0tWM36p1_hxXTU-B0K_Gq_-eAVtlrQpY24CasYiDmcXBhNS6IJMNcz1EgB',
+                code: code,
+                redirect_uri: 'http://localhost:3000',
+                scope: 'offline_access',
+            }
+        };
+
+        try {
+            const response = await axios(options);
+            console.log(response.data)
+            
+
+            const sessionId = response.data.access_token;
+            const currentSession = {"username": "someone", "refresh":response.data.refresh_token}
+            sessions.set(sessionId, currentSession);
+            res.json({ token: response.data.access_token });
+        
+        } catch (error) {
+            console.error('Error exchanging code for token', error.response ? error.response.data : error.message);
+            res.status(500).send('Authentication failed');
+        }
+    }
+});
+
 app.get('/logout', (req, res) => {
     console.log("LOGOUT", req.sessionId)
     sessions.destroy(req.sessionId);
